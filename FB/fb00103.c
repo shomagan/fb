@@ -1,0 +1,1 @@
+void fb00103_exec(void){}
