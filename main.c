@@ -25,7 +25,7 @@
 #include "nuklear_sdl_gl2.h"
 
 #define WINDOW_WIDTH 1200
-#define WINDOW_HEIGHT 800
+#define WINDOW_HEIGHT 600
 
 #define UNUSED(a) (void)a
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -43,9 +43,11 @@
  * done with this library. To try out an example uncomment the include
  * and the corresponding function. */
 #include "style.c"
-
 #include "vars.h"
 #include "kernel.h"
+#include "jsonsl.h"
+#include "json-datatypes.h"
+
 extern u8* pStartCfg;
 extern u8* pCFG;
 extern u8* pCFG_temp;
@@ -64,19 +66,16 @@ u32 cntSecFromStart;
  *
  * ===============================================================*/
 int
-main(int argc, char* argv[])
-{
+main(int argc, char* argv[]){
     printf(" start  \n");
     u64 second_timer,clock_time,clock_timer;
     cntSecFromStart = 0;
-
     /* Platform */
     SDL_Window *win;
     SDL_GLContext glContext;
     struct nk_color background;
     int win_width, win_height;
     int running = 1;
-
     /* GUI */
     struct nk_context *ctx;
     char* pFB;
@@ -134,6 +133,7 @@ main(int argc, char* argv[])
         }else{
             printf("file size not correct - %i",ConfigHead.Size);
         }
+        json_parser(argv[2]);
     }
 
     /* SDL setup */
