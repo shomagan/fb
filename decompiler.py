@@ -24,6 +24,7 @@ import sys, os, threading, atexit,io,time
 import msvcrt as m
 import struct
 import json
+import argparse
 #def hextoascii():
 TYPE_SECTION = {
     'BINAR_CONFIG_TYPE':0,
@@ -60,13 +61,18 @@ TYPE_VARIABLE_I = {0b00000000:'bit',
                  0b00000010 :'output',
                  0b00000011 :'internal' 
 }
-
+__description__ = 'Decompiler for fb32 format to json'
 def main():
+    parser = argparse.ArgumentParser(description=__description__)
+    parser.add_argument('fb')
+    args = parser.parse_args()
+
+
     time_start=time.time()
 #  fb_name = open('fb_name.txt','r')
 #  fb_namber_to_name = fb_name.readlines()
      
-    fb32 = open ('test.fb32','rb')
+    fb32 = open (args.fb,'rb')
     fb32_b = fb32.read()
     fb32.close()
     print("config size",len(fb32_b))
@@ -277,6 +283,7 @@ class ConfigHead:
     def set_config_head(self,fb32):
         i=0
         self.Size = ((fb32[i])|(fb32[i+1]<<8)|(fb32[i+2]<<16)|(fb32[i+3]<<24))
+        print("fb size",self.Size)
         i+=4
         self.Version = ((fb32[i])|(fb32[i+1]<<8)|(fb32[i+2]<<16)|(fb32[i+3]<<24))
         i+=4
@@ -395,23 +402,20 @@ class FB:
             elif type_var & SELECT_TYPE_MASK == 3:
                 self.var_variable[self.var_variable_number] = (address_or_const,'const')
                 self.var_variable_number += 1
-
             else:
                 print("BUG REPORT:UNCORECT TYPE \n")
+ 
             if (str(self.order_number)+'-'+str(self.type_number)) in config_head.full_table:
-                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)].append((self.common_variable_number,address_or_const,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]))
+                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
             else:
-                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)]=[(self.common_variable_number,address_or_const,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK])]
+                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)]=[{TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)}]
 
             self.common_variable_number += 1
-
-
         else:
             if (type_var & SELECT_TYPE_MASK == TYPE_VARIABLE['input']) or\
                (type_var & SELECT_TYPE_MASK == TYPE_VARIABLE['const']):      
                 self.input_variable[self.input_variable_number] = (address_or_const,'addr')
                 self.input_variable_number += 1
-
             elif type_var & SELECT_TYPE_MASK == 2:
                 self.out_variable[self.out_variable_number] = (address_or_const,'addr')
                 self.out_variable_number += 1
@@ -427,9 +431,9 @@ class FB:
                 config_head.address_array[address_or_const]=[(self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK])]
 
             if (str(self.order_number)+'-'+str(self.type_number)) in config_head.full_table:
-                config_head.full_table[(str(self.order_number)+'-'+str(self.type_number))].append((self.common_variable_number,address_or_const,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]))
+                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
             else:
-                config_head.full_table[(str(self.order_number)+'-'+str(self.type_number))]=[(self.common_variable_number,address_or_const,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK])]
+                config_head.full_table[str(self.order_number)+'-'+str(self.type_number)]=[{TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)}]
 
             self.common_variable_number += 1
 

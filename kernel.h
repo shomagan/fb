@@ -193,7 +193,7 @@ typedef struct SectionHead{
 	u32 Rezerv;
 }SectionHead_t;
 #pragma pack(pop)
-
+typedef void (*FB_Func)(void);
 extern u8 *pCFG;
 extern u8 *pCFG_temp;
 extern vu16 FB_N_In, FB_N_Vars, FB_N_Out;
@@ -358,7 +358,9 @@ void fb00119_exec (void);		// - modbus udp read
 void fb00120_exec (void);		// - modem udp write
 void fb00121_exec (void);		// - modbus read new 
 void fb00122_exec (void);		// - modem write new
-NewQ_Arc_R7(vu8 *pR7buffer, vu8 SubType);  // Передаём тело архива архиватору
+extern const FB_Func fb_exec[123];
+
+void NewQ_Arc_R7(vu8 *pR7buffer, vu8 SubType);  // Передаём тело архива архиватору
 //=== Зажечь светодиод приема Paket на Tiks1ms mS ===//
 void LedPaketOn(vs16 Tiks1ms);
 //=== Зажечь светодиод LEDOTVET ===//

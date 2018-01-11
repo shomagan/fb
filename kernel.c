@@ -21,8 +21,6 @@ vu8 CntSaveFBRam;
 u32 unix_time;
 u32 BateryMemFB32[512];
 extern KernelInfo_t KernelInfo;
-
-typedef void (*FB_Func)(void);
 const FB_Func fb_exec[]={
     fb00000_exec, fb00001_exec, fb00002_exec, fb00003_exec, FB00004_exec,
     fb00005_exec, fb00006_exec, fb00007_exec, fb00008_exec, fb00009_exec,
@@ -75,7 +73,7 @@ u32 GetSystemTime_t(void){
 u8 WasAddOverflow(void){
     return 0;
 }
-NewQ_Arc_R7(vu8 *pR7buffer, vu8 SubType){  // Передаём тело архива архиватору
+void NewQ_Arc_R7(vu8 *pR7buffer, vu8 SubType){  // Передаём тело архива архиватору
     printf("add new arc with type - %u",SubType);
 }
 //=== Зажечь светодиод приема Paket на Tiks1ms mS ===//

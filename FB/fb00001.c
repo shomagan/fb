@@ -23,3 +23,21 @@ void fb00001_exec(void) {
   	OUT->Out.Data.bit = 0;
   }
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not 
+*/
+u32 fb00001_var_size(u8 type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00001_IN_type);
+    case(1):
+        return 0;
+        break;
+    case(2):
+        return sizeof(fb00001_OUT_type);
+        break;
+    default:
+        return 0;
+    }
+}

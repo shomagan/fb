@@ -21,6 +21,8 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_IMPLEMENTATION
 #define NK_SDL_GL2_IMPLEMENTATION
+#include "frozen.h"
+#include "fb_parse.h"
 #include "node_editor.h"
 #include "nuklear_sdl_gl2.h"
 
@@ -45,8 +47,8 @@
 #include "style.c"
 #include "vars.h"
 #include "kernel.h"
-#include "jsonsl.h"
-#include "json-datatypes.h"
+
+
 
 extern u8* pStartCfg;
 extern u8* pCFG;
@@ -78,64 +80,9 @@ main(int argc, char* argv[]){
     int running = 1;
     /* GUI */
     struct nk_context *ctx;
-    char* pFB;
-    FILE *file = fopen(argv[1], "r");
-    if (file==NULL){
-        printf(" error open config file\n");
-        KernelInfo.CfgSize=0;
-    }else{
-        u32 sz;
-        fseek(file, 0L, SEEK_END);
-        sz = ftell(file);
-        pFB = malloc(sizeof(char)*sz);
-        fseek(file, 0L, SEEK_SET);
-        printf("config file size - %u",sz);
-        fread(pFB,1, sz,file);
-        ConfigHead_t ConfigHead;
-        SectionHead_t SectionHead;
-        memcpy(&ConfigHead,pFB,sizeof(ConfigHead));
-        for(u16 i=0;i<sz;i++){
-            printf("%X ",(u8)pFB[i]);
-        }
-        if((ConfigHead.Size>8)&&(ConfigHead.Size<=sz)){
-            u16 temp_crc;
-            u16 crc;
-            printf(" find config with size %i \n",ConfigHead.Size);
-            printf("crc %i %i %i %i \n",pFB[ConfigHead.Size-4],pFB[ConfigHead.Size-3],pFB[ConfigHead.Size-2],pFB[ConfigHead.Size-1]);
-            memcpy(&temp_crc,&pFB[ConfigHead.Size-2],sizeof(u16));
-            crc = check_file_crc(pFB,ConfigHead.Size-2);
-            if (temp_crc == crc){
-                printf(" crc correct - %i \n",temp_crc);
-                printf(" ConfigHead.SectionNumber - %u \n",ConfigHead.SectionNumber);
-                for (u16 k=0;k<ConfigHead.SectionNumber;k++){
-                    memcpy(&SectionHead,(pFB+sizeof(ConfigHead_t)+sizeof(SectionHead_t)*k),sizeof(SectionHead));
-                    if (SectionHead.Type != BINAR_CONFIG_TYPE){
-                        continue;
-                    }
-                    KernelInfo.CfgSize = SectionHead.LengthSection-2;
-                    printf("SectionHead.LengthSection %u\n",(u16)SectionHead.LengthSection);
-                    KernelInfo.pStartCFG = (char*)(pFB+SectionHead.Pozition);
-                    printf("kernel start position %u\n",(u16)SectionHead.Pozition);
-                    pCFG = (u8*)(KernelInfo.pStartCFG);
-                    KernelInfo.CfgSize=ReadInt16Cfg()-2;
-                    printf("KernelInfo.CfgSize %u\n",(u16)KernelInfo.CfgSize);
-                    KernelInfo.CfgTWICommSize=ReadInt16Cfg();
-                    printf("KernelInfo.CfgTWICommSize %u\n",(u16)KernelInfo.CfgTWICommSize);
-                    pCFG +=KernelInfo.CfgTWICommSize;
-                    KernelInfo.FBCfgSize=ReadInt16Cfg();
-                    printf("KernelInfo.FBCfgSize %u\n",(u16)KernelInfo.FBCfgSize);
-                    KernelInfo.FBkernelRate = *pCFG;
-                    printf("KernelInfo.FBkernelRate %u\n",(u16)KernelInfo.FBkernelRate);
-                }
-            }else{
-                printf(" crc not correct ,from file %i, decided %i \n",temp_crc,crc);
-            }
-        }else{
-            printf("file size not correct - %i",ConfigHead.Size);
-        }
-        json_parser(argv[2]);
-    }
-
+    char* pFB = NULL;
+    parse_fb32_file(argv[1], pFB);
+    parse_json_fb_file(argv[2]);
     /* SDL setup */
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
     SDL_Init(SDL_INIT_VIDEO);
@@ -190,7 +137,7 @@ main(int argc, char* argv[]){
         nk_input_end(ctx);
 
         /* GUI */
-        if (nk_begin(ctx, "Demo", nk_rect(50, 50, 210, 250),
+/*        if (nk_begin(ctx, "Demo", nk_rect(50, 50, 210, 250),
             NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
             NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
         {
@@ -222,7 +169,7 @@ main(int argc, char* argv[]){
             }
         }
         nk_end(ctx);
-
+  */
         /* -------------- EXAMPLES ---------------- */
         /*calculator(ctx);*/
         /*overview(ctx);*/
