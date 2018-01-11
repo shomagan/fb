@@ -71,3 +71,4 @@ typedef struct {
 #define s00079_APVMask2OFF		~(s00079_APVMask2ON)
 
 void fb00079_exec(void);
+u32 fb00079_var_size(u8 type);

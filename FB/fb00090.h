@@ -72,3 +72,4 @@ typedef struct {
 void fb00090_exec();
 
                                
+u32 fb00090_var_size(u8 type);

@@ -15,3 +15,4 @@ typedef struct {
 typedef struct {
 	Register_type Counter;        // int8/16/32
 } fb00078_OUT_type;
+u32 fb00078_var_size(u8 type);

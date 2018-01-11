@@ -10,3 +10,4 @@ typedef struct {
 	Register_type Out;
 } fb00002_OUT_type;
 
+u32 fb00002_var_size(u8 type);

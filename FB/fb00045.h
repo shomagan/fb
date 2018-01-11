@@ -13,3 +13,4 @@ typedef struct {
 	Register_type Year;       // Год
 } fb00045_OUT_type;
 
+u32 fb00045_var_size(u8 type);

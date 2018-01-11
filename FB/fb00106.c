@@ -43,3 +43,18 @@ void fb00106_exec(void)
     OUT->Error.Data.bit=1; // Ошибка!
   }
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00106_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00106_IN_type);
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00106_OUT_type);
+    default:
+        return 0;
+    }
+}

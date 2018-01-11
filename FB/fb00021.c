@@ -27,3 +27,18 @@ void fb00021_exec(void) {
 		break;
 	}
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00021_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00021_IN_type);
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00021_OUT_type);
+    default:
+        return 0;
+    }
+}

@@ -314,4 +314,18 @@ if (VAR->SecTimer.Data.uint8 == KernelInfo.FBkernelRate) //сброс таймера отсчета
    	VAR->SecTimer.Data.uint8 = 0;
 
 }
+}/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00090_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00090_IN_type);
+    case(1):
+        return sizeof(fb00090_VAR_type);
+    case(2):
+        return sizeof(fb00090_OUT_type);
+    default:
+        return 0;
+    }
 }

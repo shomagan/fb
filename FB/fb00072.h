@@ -96,3 +96,4 @@ Flo32 calc_ro_tabl(Flo32 ro_in, s16 temp);
 Flo32 calc_ro(Flo32 ro_in, Flo32 temp);
 // Функция вычисления коэффициента плотности воды в текущих условиях при темп. 0 - 100
 Flo32 calc_ro_water(Flo32 ro_in, Flo32 temp, u16 press);
+u32 fb00072_var_size(u8 type);

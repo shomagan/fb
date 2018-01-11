@@ -9,3 +9,4 @@ typedef struct {
 	Register_type OldSost16;  // int16 Старые Sost и Sost1 в одном int16
 	Register_type Ok;         // bit  
 } fb00049_OUT_type;
+u32 fb00049_var_size(u8 type);

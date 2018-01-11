@@ -18,3 +18,4 @@ typedef union{
 	u16 uint16[125];
 	u32 uint32[62];
 } Dataunion;
+u32 fb00053_var_size(u8 type);

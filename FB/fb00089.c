@@ -4,6 +4,7 @@
 
 #include "fb00089.h"
 
+#include "../kernel.h"
 void fb00089_exec (void)
 {
   fb00089_IN_type *IN = (fb00089_IN_type *) FBInputs;
@@ -23,4 +24,19 @@ void fb00089_exec (void)
 
   if (IN->Input.Data.bit == 0)
   	VAR->Input.Data.bit = 0 ;
+}
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00089_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00089_IN_type);
+    case(1):
+        return sizeof(fb00089_VAR_type);
+    case(2):
+        return sizeof(fb00089_OUT_type);
+    default:
+        return 0;
+    }
 }

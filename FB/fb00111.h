@@ -42,3 +42,4 @@ vu16 MbusCRC(vu8 *buff, vu8 len);		// Расчет crc в канале M-bus
 vu8 AnalizData(vu8 len);		// Анализ принятых данных от приборов
 vu8 FillBuf (void);				// Заполение буфера на отправку, расчет CRC
 u16 m_crc16(vu8* pck, vu8 len); // Расчет crc Matlab
+u32 fb00111_var_size(u8 type);

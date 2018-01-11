@@ -17,3 +17,4 @@ typedef struct {
 } fb00093_OUT_type;
 
 void fb00093_exec();
+u32 fb00093_var_size(u8 type);

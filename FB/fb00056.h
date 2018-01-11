@@ -8,3 +8,4 @@ typedef struct {
 	Register_type Value;      // Значение системной найтройки
 	Register_type ErrorCode;  // Код ошибки при чтении
 } fb00056_OUT_type;
+u32 fb00056_var_size(u8 type);

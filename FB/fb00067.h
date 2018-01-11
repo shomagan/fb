@@ -12,3 +12,4 @@ typedef struct {
 typedef struct {
 	Register_type Dout;   // Выходной cигнал
 } fb00067_OUT_type;
+u32 fb00067_var_size(u8 type);

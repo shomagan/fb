@@ -8,3 +8,4 @@ typedef struct {
 typedef struct {
 	Register_type Output[256];  // Выходной массив
 } fb00060_OUT_type;
+u32 fb00060_var_size(u8 type);

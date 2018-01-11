@@ -10,3 +10,4 @@ typedef struct {
 
 
 
+u32 fb00085_var_size(u8 type);

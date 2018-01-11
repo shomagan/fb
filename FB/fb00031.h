@@ -11,3 +11,4 @@ typedef struct {
 	Register_type ReadedOK;
 	Register_type Out[250];
 } fb00031_OUT_type;
+u32 fb00031_var_size(u8 type);

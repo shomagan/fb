@@ -23,3 +23,4 @@ typedef struct {
 	Register_type Bloks[FB54_OutputkSize];    // Выход (блоки данных)
 } fb00054_OUT_type;
 
+u32 fb00054_var_size(u8 type);

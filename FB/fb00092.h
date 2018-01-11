@@ -8,3 +8,4 @@ typedef volatile struct {
 typedef volatile struct {
 	Register_type OutNum;		//- uint32		- число uint32
 } fb00092_OUT_type;
+u32 fb00092_var_size(u8 type);

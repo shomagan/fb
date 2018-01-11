@@ -29,3 +29,4 @@ typedef struct {
 	Register_type Status;			        // uint16
   Register_type TableNoteNumm;			// uint16
 } fb00118_OUT_type;
+u32 fb00118_var_size(u8 type);

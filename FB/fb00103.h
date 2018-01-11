@@ -25,3 +25,4 @@ typedef struct {
 } fb00103_OUT_type;
 
 void fb00103_exec (void);		// - Чтение сетевых переменных
+u32 fb00103_var_size(u8 type);

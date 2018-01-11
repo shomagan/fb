@@ -24,3 +24,4 @@ typedef struct {
   Register_type RestartCounter;   //int16
   Register_type Out[256 - 3]; // максимум 251 байта
 } fb00121_OUT_type;
+u32 fb00121_var_size(u8 type);

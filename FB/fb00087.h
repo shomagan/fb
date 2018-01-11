@@ -88,3 +88,4 @@ typedef struct {
 	Register_type Pc_Gas;                  // float32 19 Текущий газовый фактор по скважине куб.м/т
 	Register_type MASK_mode;               // uint8   20 Режим работы ГЗУ
 } fb00087_OUT_type;
+u32 fb00087_var_size(u8 type);

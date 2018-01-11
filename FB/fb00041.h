@@ -9,3 +9,4 @@ typedef struct {
 	Register_type T;    // Выход T
 	Register_type nT;   // Инвертированный выход T
 } fb00041_OUT_type;
+u32 fb00041_var_size(u8 type);

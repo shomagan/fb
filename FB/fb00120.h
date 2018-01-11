@@ -33,3 +33,4 @@ typedef struct {
   Register_type PassPerfomanceCounter;    // uint8 
 	Register_type OK;
 } fb00120_OUT_type;
+u32 fb00120_var_size(u8 type);

@@ -19,3 +19,4 @@ typedef struct {
 
 void fb00112_exec (void);		// - Запись сетевых переменных
 
+u32 fb00112_var_size(u8 type);

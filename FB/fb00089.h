@@ -18,3 +18,4 @@ typedef struct
 } fb00089_OUT_type;
 
 void fb00089_exec(void);
+u32 fb00089_var_size(u8 type);

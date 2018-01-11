@@ -15,3 +15,4 @@ typedef struct {
 typedef struct {
 	Register_type Output;    //bit/uint8/uint16/uint32/float Output signal 
 } fb00115_OUT_type;
+u32 fb00115_var_size(u8 type);

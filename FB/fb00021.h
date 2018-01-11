@@ -10,3 +10,4 @@ typedef struct {
 	Register_type OutUp;
 	Register_type OutLow;
 } fb00021_OUT_type;
+u32 fb00021_var_size(u8 type);

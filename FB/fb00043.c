@@ -27,3 +27,18 @@ void fb00043_exec(void) {
 	VAR->In_Old.Data.bit = IN->In.Data.bit;   // Обновляем состояние In_Old
 }
 
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00043_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00043_IN_type);
+    case(1):
+        return sizeof(fb00043_VAR_type);
+    case(2):
+        return sizeof(fb00043_OUT_type);
+    default:
+        return 0;
+    }
+}

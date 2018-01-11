@@ -24,3 +24,4 @@ typedef struct {
   Register_type IntervalTimer;  //int16
   Register_type RestartCounter;   //int16
 } fb00122_OUT_type;
+u32 fb00122_var_size(u8 type);

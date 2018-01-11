@@ -7,3 +7,4 @@ typedef struct {
 typedef struct {
 	Register_type Connected;    // bit          // признак присутствия модуля на шине
 } fb00039_OUT_type;
+u32 fb00039_var_size(u8 type);

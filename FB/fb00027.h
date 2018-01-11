@@ -11,3 +11,4 @@ typedef struct {
 typedef struct {
 	Register_type PeriodTime;
 } fb00027_OUT_type;
+u32 fb00027_var_size(u8 type);

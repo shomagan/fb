@@ -18,3 +18,4 @@ typedef struct {
 	Register_type OutDNMNumber;                   // int8 Nomer packeta DNM 
 } fb00088_OUT_type;
 
+u32 fb00088_var_size(u8 type);

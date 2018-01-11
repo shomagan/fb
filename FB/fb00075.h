@@ -8,3 +8,4 @@ typedef struct {
 typedef struct {
 	Register_type Output;  // Выход 32бит
 } fb00075_OUT_type;
+u32 fb00075_var_size(u8 type);

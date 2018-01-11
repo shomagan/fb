@@ -12,3 +12,4 @@ typedef struct {
 typedef struct {
 	Register_type Output;
 } fb00029_OUT_type;
+u32 fb00029_var_size(u8 type);

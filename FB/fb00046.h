@@ -12,3 +12,4 @@ typedef struct {
 typedef struct {
 	Register_type UNIX_time;       // Время в формате UNIX
 } fb00046_OUT_type;
+u32 fb00046_var_size(u8 type);

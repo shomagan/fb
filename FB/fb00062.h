@@ -8,3 +8,4 @@ typedef struct {
 typedef struct {
 	Register_type Var_Out[256-1];  // Запомненный выход
 } fb00062_OUT_type;
+u32 fb00062_var_size(u8 type);

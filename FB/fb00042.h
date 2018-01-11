@@ -8,3 +8,4 @@ typedef struct {
 	Register_type Out;    // Выход (импульс)
 	Register_type ROut;   // Выход на сброс входа
 } fb00042_OUT_type;
+u32 fb00042_var_size(u8 type);

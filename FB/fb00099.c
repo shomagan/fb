@@ -88,3 +88,18 @@ void fb00099_exec() {
   else if (VAR->prevUo.Data.float32 <= 0.5) OUT->Output.Data.float32 = 0.0;
   else OUT->Output.Data.float32 = VAR->prevUo.Data.float32 ;
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00099_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00099_IN_type);
+    case(1):
+        return sizeof(fb00099_VAR_type);
+    case(2):
+        return sizeof(fb00099_OUT_type);
+    default:
+        return 0;
+    }
+}

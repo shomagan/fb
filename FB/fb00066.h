@@ -67,3 +67,4 @@ typedef struct {
 
 #define Manual      (1<<14)  // Ручной режим
 #define Manual1Cnt  (1<<15)  // Временный ручной замер (1 раз), затем циклический
+u32 fb00066_var_size(u8 type);

@@ -69,3 +69,18 @@ void fb00086_exec ()
 		| (Cmd == 0 ? 16:0) | (Cmd == 2 ? 32:0) | (Cmd == 3 ? 64:0);
 	 //3-откл все,2-вкл все,1-ничего не делать,0-вкл основные
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00086_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00086_IN_type);
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00086_OUT_type);
+    default:
+        return 0;
+    }
+}

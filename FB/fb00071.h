@@ -10,3 +10,4 @@ typedef struct {
 typedef struct {
 	Register_type Outputs[Channels];  // Выходы
 } fb00071_OUT_type;
+u32 fb00071_var_size(u8 type);

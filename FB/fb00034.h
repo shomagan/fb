@@ -21,3 +21,4 @@ typedef struct {
 	Register_type ER_Exception;
 	Register_type OK;
 } fb00034_OUT_type;
+u32 fb00034_var_size(u8 type);

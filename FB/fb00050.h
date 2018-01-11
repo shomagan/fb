@@ -10,3 +10,4 @@ typedef struct {
 	Register_type DI_Old;     // bit Старое значение DI
 	Register_type Ok;         // bit  
 } fb00050_OUT_type;
+u32 fb00050_var_size(u8 type);

@@ -56,3 +56,4 @@ void aro_polyfit1(int xstart, int xend, Register_type y[], short off_y, float *c
 void aro_polyfit2(int xstart, int xend, Register_type y[], short off_y, float *c1, float *c2, float *c3);
 void aro_polyfit3(int xstart, int xend, Register_type y[], short off_y, float *c1, float *c2, float *c3, float *c4);
 
+u32 fb00064_var_size(u8 type);

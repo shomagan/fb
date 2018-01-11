@@ -9,3 +9,4 @@ typedef struct {
 typedef struct {
 	Register_type ErrorCode;  // Код ошибки при записи
 } fb00057_OUT_type;
+u32 fb00057_var_size(u8 type);

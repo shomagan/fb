@@ -8,3 +8,4 @@ typedef struct {
 	Register_type LoByte;  // Младший байт
 	Register_type HiByte;  // Старший байт
 } fb00063_OUT_type;
+u32 fb00063_var_size(u8 type);

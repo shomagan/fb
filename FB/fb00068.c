@@ -430,3 +430,18 @@ void fb00068_exec(void){
   VAR->KernelClk.Data.uint32++;
 #endif
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00068_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00068_IN_type);
+    case(1):
+        return sizeof(fb00068_VAR_type);
+    case(2):
+        return sizeof(fb00068_OUT_type);
+    default:
+        return 0;
+    }
+}

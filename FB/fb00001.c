@@ -6,7 +6,7 @@
 #include "fb00001.h"
 
 void fb00001_exec(void) {
-	u8	i;
+	u8 i;
 	
 	fb00001_IN_type *IN = (fb00001_IN_type *) FBInputs;
 	fb00001_OUT_type *OUT = (fb00001_OUT_type *) FBOutputs;
@@ -25,18 +25,15 @@ void fb00001_exec(void) {
 }
 /*
   type 0 - IN,1- VAR,2 - OUT
-  return size struct, or 0 if struct not 
-*/
-u32 fb00001_var_size(u8 type) {
+  return size struct, or 0 if struct not
+*/    unsigned int fb00001_var_size(unsigned char type) {
     switch(type){
     case(0):
         return sizeof(fb00001_IN_type);
     case(1):
         return 0;
-        break;
     case(2):
         return sizeof(fb00001_OUT_type);
-        break;
     default:
         return 0;
     }

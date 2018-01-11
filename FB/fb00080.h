@@ -45,3 +45,4 @@ typedef struct {
 #define s00080_IMPULSTIME			3			//¬рем€ удержани€ управл€ющего сигнала в секундах
 
 void fb00080_exec(void);
+u32 fb00080_var_size(u8 type);

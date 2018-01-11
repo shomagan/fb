@@ -9,3 +9,4 @@ typedef struct {
   Register_type Output;
   Register_type Overflow;
 } fb00018_OUT_type;
+u32 fb00018_var_size(u8 type);

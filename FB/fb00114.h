@@ -10,3 +10,4 @@ typedef struct {
 	Register_type Three;  // 3
 	Register_type Four;  // 4
 } fb00114_OUT_type;
+u32 fb00114_var_size(u8 type);

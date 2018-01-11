@@ -16,3 +16,18 @@ void fb00023_exec (void){
 
 	OUT->Need2Sync.Data.bit = GetNeed2SyncState();
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00023_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return 0;
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00023_OUT_type);
+    default:
+        return 0;
+    }
+}

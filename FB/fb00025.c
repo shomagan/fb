@@ -11,3 +11,18 @@ void fb00025_exec(void) {
 
 	OUT->SystemTime.Data.uint32 = (FB32blok.vars.Cnt1Min * 60) + FB32blok.vars.Cnt1Sec;
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00025_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return 0;
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00025_OUT_type);
+    default:
+        return 0;
+    }
+}

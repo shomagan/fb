@@ -33,3 +33,4 @@ typedef struct {
 	Register_type OutPosition;         // uint16 // 
 } fb00101_OUT_type;
 void fb00101_exec(void);
+u32 fb00101_var_size(u8 type);

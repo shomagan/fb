@@ -11,3 +11,4 @@ typedef struct {
 	Register_type AI_Old;     // int16  Старое значение AI
 	Register_type Ok;         // bit  
 } fb00051_OUT_type;
+u32 fb00051_var_size(u8 type);

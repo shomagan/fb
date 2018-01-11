@@ -160,3 +160,4 @@ typedef struct {
 
 void fb00068_exec(void);
 
+u32 fb00068_var_size(u8 type);

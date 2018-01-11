@@ -36,3 +36,4 @@ typedef struct {
 	Register_type LenBlockIn;       // int8
 	Register_type In[64];     // максимум 64 байта
 } fb00035_OUT_type;
+u32 fb00035_var_size(u8 type);

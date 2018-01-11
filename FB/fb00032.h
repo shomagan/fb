@@ -9,3 +9,4 @@ typedef struct {
 	Register_type NumBytes;         // int16
 	Register_type In[250];
 } fb00032_IN_type;
+u32 fb00032_var_size(u8 type);

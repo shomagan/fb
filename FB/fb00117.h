@@ -7,3 +7,4 @@ typedef struct {
 typedef struct {
 	Register_type Output[254];  // 1
 } fb00117_OUT_type;
+u32 fb00117_var_size(u8 type);

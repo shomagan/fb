@@ -1562,3 +1562,18 @@ void aro_polyfit3(int xstart, int xend, Register_type y[], short off_y, float *c
   *c4 = R[4] * a41 + R[8] * a42 + R[12] * a43 + R[16] * a44;
  */
 }
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00064_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00064_IN_type);
+    case(1):
+        return sizeof(fb00064_VAR_type);
+    case(2):
+        return sizeof(fb00064_OUT_type);
+    default:
+        return 0;
+    }
+}

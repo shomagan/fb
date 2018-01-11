@@ -39,3 +39,4 @@ typedef struct {
 	Register_type ArhInvPeretok;	//-14 bit		- Флаг, что текущие перетоки по интервальным счетчикам пора архивировать
 	Register_type ArhCNTInvTif;		//-15 uint32	- Для архива, счетчик перетоков за текущий интервал
 } fb00091_OUT_type;
+u32 fb00091_var_size(u8 type);

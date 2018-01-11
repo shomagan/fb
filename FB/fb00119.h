@@ -35,3 +35,4 @@ typedef struct {
 	Register_type OK;
   Register_type Out[256 - 3]; // максимум 251 байта
 } fb00119_OUT_type;
+u32 fb00119_var_size(u8 type);

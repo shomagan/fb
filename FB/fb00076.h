@@ -11,3 +11,4 @@ typedef struct {
 typedef struct {
 	Register_type Y;   // Смасштабированный выход
 } fb00076_OUT_type;
+u32 fb00076_var_size(u8 type);

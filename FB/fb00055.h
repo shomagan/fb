@@ -18,3 +18,4 @@ typedef struct {
 typedef struct {
 	Register_type Out;                          // Выходной элемент
 } fb00055_OUT_type;
+u32 fb00055_var_size(u8 type);
