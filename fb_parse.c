@@ -144,7 +144,7 @@ uint32_t first_cycle(void){
             fb_number++;
             CodeFB=ReadInt16Cfg();
 #if DEBUG_LOAD
-            printf("execute fb number %u",(u16)CodeFB);
+            printf("fb number %u",(u16)CodeFB);
 #endif
             FB_N_In=FB_N_Out=FB_N_Vars=0;
             pCFG_temp=0;

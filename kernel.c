@@ -421,8 +421,6 @@ u8 LoadFBRegister (void){
             printf("load fb register uncorrect type  %u",(u8)type);
   #endif
             break;
-
-
         }
         type = *pCFG;
     }
