@@ -12,4 +12,4 @@ struct fb_data{
   unsigned short output_number;
   struct fb_data* prev;
   struct fb_data* next;
-}
+};

@@ -22,9 +22,10 @@
 #define NK_IMPLEMENTATION
 #define NK_SDL_GL2_IMPLEMENTATION
 #include "frozen.h"
-#include "fb_parse.h"
+
 #include "node_editor.h"
 #include "nuklear_sdl_gl2.h"
+#include "serial.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 600
@@ -47,7 +48,7 @@
 #include "style.c"
 #include "vars.h"
 #include "kernel.h"
-
+#include "fb_parse.h"
 
 
 extern u8* pStartCfg;
@@ -83,6 +84,12 @@ main(int argc, char* argv[]){
     char* pFB = NULL;
     parse_fb32_file(argv[1], pFB);
     parse_json_fb_file(argv[2]);
+    char com_str[] = "\\\\.\\COM4";
+    char temp_str[] = "heihei";
+    HANDLE h_comm;
+    h_comm = open_serial_port(com_str,sizeof(com_str));
+    write_to_serial_port(temp_str,sizeof(temp_str),h_comm);
+    close_serial_port(h_comm);
     /* SDL setup */
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
     SDL_Init(SDL_INIT_VIDEO);

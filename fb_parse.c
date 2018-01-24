@@ -4,11 +4,11 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <sys/stat.h>
-#include "fb_parse.h"
 #include "frozen.h"
 #include "vars.h"
 #include "kernel.h"
 #include "regs.h"
+#include "fb_parse.h"
 
 #define FAIL(str, line)                           \
   do {                                            \
