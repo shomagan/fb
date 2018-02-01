@@ -83,7 +83,9 @@ main(int argc, char* argv[]){
     struct nk_context *ctx;
     char* pFB = NULL;
     parse_fb32_file(argv[1], pFB);
+    parse_json_fb_file(argv[3]);
     parse_json_fb_file(argv[2]);
+    return (0);
     char com_str[] = "\\\\.\\COM4";
     char temp_str[] = "heihei";
     HANDLE h_comm;

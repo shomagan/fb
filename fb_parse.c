@@ -30,6 +30,49 @@
   } while (0)
 
 
+char parse_json_fb_array_file(const char *path){
+    uint32_t fd, status;
+    char *buf;
+    uint64_t nread;
+    struct json_token key, val;
+    char buf_s[200];
+    printf("==== %s ====\n", path);
+    uint32_t idx;
+    FILE *file = fopen(path, "r");
+//    fd = open(path, O_RDONLY);
+    if (file==NULL) {
+        printf("==== did't open file %s ====\n", path);
+        return 0;
+    }else{
+        u32 sz;
+        fseek(file, 0L, SEEK_END);
+        sz = ftell(file);
+        buf = malloc(sizeof(char)*sz);
+        fseek(file, 0L, SEEK_SET);
+        printf("json file size - %u",sz);
+        fread(buf,1,sz,file);
+        void *h = NULL;
+        while ((h = json_next_key(buf, sz, h, "", &key, &val)) != NULL) {
+            snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
+      //      ASSERT(strcmp(results[i], buf) == 0);
+
+            printf("Key [%s]\n",  buf_s);
+            void *k = NULL;
+            struct json_token key_in, val_in;
+            val.ptr = val.ptr+1;
+            val.len = val.len-1;
+            while ((k = json_next_key(val.ptr, val.len, k, "", &key_in, &val_in)) != NULL) {
+                snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]", key_in.len, key_in.ptr, val_in.len,
+                         val_in.ptr);
+                printf("Key [%s]\n",  buf_s);
+                k = val_in.ptr + val_in.len + 2;
+                val.ptr = k;
+                k = NULL;
+                val.len = val.len - key_in.len - val_in.len;
+            }
+        }
+    }
+}
 
 char parse_json_fb_file(const char *path){
     uint32_t fd, status;
@@ -54,24 +97,23 @@ char parse_json_fb_file(const char *path){
         fread(buf,1,sz,file);
         void *h = NULL;
         while ((h = json_next_key(buf, sz, h, "", &key, &val)) != NULL) {
-            snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]", key.len, key.ptr, val.len,
-                     val.ptr);
+            snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
       //      ASSERT(strcmp(results[i], buf) == 0);
+
             printf("Key [%s]\n",  buf_s);
             void *k = NULL;
             struct json_token key_in, val_in;
+            val.ptr = val.ptr+1;
+            val.len = val.len-1;
             while ((k = json_next_key(val.ptr, val.len, k, "", &key_in, &val_in)) != NULL) {
                 snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]", key_in.len, key_in.ptr, val_in.len,
                          val_in.ptr);
-          //      ASSERT(strcmp(results[i], buf) == 0);
                 printf("Key [%s]\n",  buf_s);
+                k = val_in.ptr + val_in.len + 2;
+                val.ptr = k;
+                k = NULL;
+                val.len = val.len - key_in.len - val_in.len;
             }
-        }
-        h = NULL;
-        while ((h = json_next_elem(buf, sz, h, "", &idx, &val)) != NULL) {
-            snprintf(buf_s, sizeof(buf_s), "[%d] -> [%.*s]", idx, val.len, val.ptr);
-            printf("Value [%s]\n",  buf_s);
-    //            ASSERT(strcmp(results[i], buf) == 0);
         }
     }
 }
