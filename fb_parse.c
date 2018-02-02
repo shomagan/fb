@@ -31,6 +31,15 @@
 
 
 char parse_json_fb_array_file(const char *path){
+    /*
+    parse array config array file for branch on scheme
+
+                *-----------.
+                            |
+                            |
+                            '------------>
+
+    */
     uint32_t fd, status;
     char *buf;
     uint64_t nread;

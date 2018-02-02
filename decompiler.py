@@ -277,9 +277,11 @@ class ConfigHead:
     SectionNumber = 0 #u8 
     crc = 0
     address_array = {}
+    address_number = 0
     full_table = {}
     def __init__(self):
         self.Size = 0
+        self.address_number = 0
     def set_config_head(self,fb32):
         i=0
         self.Size = ((fb32[i])|(fb32[i+1]<<8)|(fb32[i+2]<<16)|(fb32[i+3]<<24))
@@ -307,6 +309,8 @@ class ConfigHead:
         json_address_array = json.dumps(self.address_array)
         print(json_address_array)
         json_address_array_file = open ('json_address_array.json','w')
+        json_address_array_number = json.dumps({self.address_number:self.address_number})
+        json_address_array_file.write(json_address_array_number)
         json_address_array_file.write(json_address_array)
         json_address_array_file.close()
         print(self.full_table)
@@ -427,6 +431,7 @@ class FB:
             if address_or_const in config_head.address_array:
                 config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number))
             else:
+                config_head.address_number +=1
                 config_head.address_array[address_or_const]=[(self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number)]
 
             if (str(self.order_number)+' '+str(self.type_number)) in config_head.full_table:
