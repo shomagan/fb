@@ -9,7 +9,8 @@
 #include "kernel.h"
 #include "regs.h"
 #include "fb_parse.h"
-
+#include "fb_config.h"
+struct fb_branch* branch_array;
 #define FAIL(str, line)                           \
   do {                                            \
     printf("Fail on line %d: [%s]\n", line, str); \
@@ -42,8 +43,12 @@ char parse_json_fb_array_file(const char *path){
     */
     uint32_t fd, status;
     char *buf;
+    char *buf_t;
     uint64_t nread;
     struct json_token key, val;
+    u32 address_number;
+    u32 branch_number;
+    branch_number = 0;
     char buf_s[200];
     printf("==== %s ====\n", path);
     uint32_t idx;
@@ -62,27 +67,69 @@ char parse_json_fb_array_file(const char *path){
         fread(buf,1,sz,file);
         void *h = NULL;
         while ((h = json_next_key(buf, sz, h, "", &key, &val)) != NULL) {
-            snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
+        	//find address number
+            snprintf(buf_s, sizeof(buf_s), "Key [%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
       //      ASSERT(strcmp(results[i], buf) == 0);
-
-            printf("Key [%s]\n",  buf_s);
-            void *k = NULL;
-            struct json_token key_in, val_in;
-            val.ptr = val.ptr+1;
-            val.len = val.len-1;
-            while ((k = json_next_key(val.ptr, val.len, k, "", &key_in, &val_in)) != NULL) {
-                snprintf(buf_s, sizeof(buf_s), "[%.*s] -> [%.*s]", key_in.len, key_in.ptr, val_in.len,
-                         val_in.ptr);
-                printf("Key [%s]\n",  buf_s);
-                k = val_in.ptr + val_in.len + 2;
-                val.ptr = k;
-                k = NULL;
-                val.len = val.len - key_in.len - val_in.len;
+            printf("%s\n",  buf_s);
+            buf_t = val.ptr + val.len + 1;
+            address_number = atoi(val.ptr);
+        }
+        printf("address number %i",address_number);
+        sz -= (buf_t - buf);
+        while ((h = json_next_key(buf_t, sz, h, "", &key, &val)) != NULL) {
+        	u8 ti;
+        	//find branch number
+            snprintf(buf_s, sizeof(buf_s), "Key [%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
+      //      ASSERT(strcmp(results[i], buf) == 0);
+            printf("[%s]\n",  buf_s);
+            ti = atoi(val.ptr+1);
+            if(ti>1){
+            	branch_number+=(ti-1);
+            }
+        }
+        printf("branch number %i",branch_number);
+        branch_array = malloc(branch_number*sizeof(struct fb_branch));
+        while ((h = json_next_key(buf_t, sz, h, "", &key, &val)) != NULL){
+            u8 branch_number;
+            //find branch number
+            snprintf(buf_s, sizeof(buf_s), "Key [%.*s] -> [%.*s]",key.len,key.ptr,val.len,val.ptr);
+      //      ASSERT(strcmp(results[i], buf) == 0);
+            printf("[%s]\n",  buf_s);
+            branch_number = atoi(val.ptr+1);
+            if(branch_number>1){
+            	struct json_token  val_b;
+            	int id = 0;
+                for (u16 tb=0;tb<=branch_number;tb++){
+                    if((h = json_next_elem(val.ptr, val.len, h, "", &id, &val_b))!=NULL){
+                    	int id_i=0;
+                    	struct json_token val_i;
+                        snprintf(buf_s, sizeof(buf_s), "element %i -> [%.*s]",id,val_b.len,val_b.ptr);
+      //      ASSERT(strcmp(results[i], buf) == 0);
+                        printf("[%s]\n",  buf_s);
+                        if(tb>0){
+							for (u16 j=0;j<4;j++){
+							   if((h = json_next_elem(val_b.ptr, val_b.len, h, "", &id_i, &val_i))!=NULL){
+			                       snprintf(buf_s, sizeof(buf_s), "element_internal %i -> [%.*s]",id_i,val_i.len,val_i.ptr);
+			      //      ASSERT(strcmp(results[i], buf) == 0);
+			                       printf("[%s]\n",  buf_s);
+							   }else{
+								   printf("element of branch lower then writed",  buf_s);
+								   break;
+							   }
+							}
+                        }
+                    }else{
+                    	printf("element of branch lower then writed",  buf_s);
+                        break;
+                    }
+                }
             }
         }
     }
 }
+uint8_t parse_branch_key(char* key,char* value){
 
+}
 char parse_json_fb_file(const char *path){
     uint32_t fd, status;
     char *buf;
