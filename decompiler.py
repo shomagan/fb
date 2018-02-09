@@ -409,10 +409,11 @@ class FB:
             else:
                 print("BUG REPORT:UNCORECT TYPE \n")
  
-            if (str(self.order_number)+' '+str(self.type_number)) in config_head.full_table:
-                config_head.full_table[str(self.order_number)+' '+str(self.type_number)].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+            if self.order_number in config_head.full_table:
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
             else:
-                config_head.full_table[str(self.order_number)+' '+str(self.type_number)]=[{TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)}]
+                config_head.full_table[self.order_number]=[self.type_number];
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
 
             self.common_variable_number += 1
         else:
@@ -429,15 +430,18 @@ class FB:
             else:
                 print("BUG REPORT:UNCORECT TYPE \n")
             if address_or_const in config_head.address_array:
+                config_head.address_array[address_or_const][0] +=1
                 config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number))
             else:
                 config_head.address_number +=1
-                config_head.address_array[address_or_const]=[(self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number)]
+                config_head.address_array[address_or_const]=[1]
+                config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number))
 
-            if (str(self.order_number)+' '+str(self.type_number)) in config_head.full_table:
-                config_head.full_table[str(self.order_number)+' '+str(self.type_number)].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+            if (self.order_number) in config_head.full_table:
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
             else:
-                config_head.full_table[str(self.order_number)+' '+str(self.type_number)]=[{TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)}]
+                config_head.full_table[self.order_number]=[self.type_number];
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
             self.common_variable_number += 1
 
     def print(self):
