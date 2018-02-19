@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -104,7 +104,6 @@ char parse_json_fb_array_file(const char *path){
                     	int id_i=0;
                     	struct json_token val_i;
                         snprintf(buf_s, sizeof(buf_s), "element %i -> [%.*s]",id,val_b.len,val_b.ptr);
-      //      ASSERT(strcmp(results[i], buf) == 0);
                         printf("[%s]\n",  buf_s);
                         if(tb>0){
 							for (u16 j=0;j<4;j++){
@@ -125,6 +124,9 @@ char parse_json_fb_array_file(const char *path){
                 }
             }
         }
+
+
+
     }
 }
 uint8_t parse_branch_key(char* key,char* value){
