@@ -181,7 +181,7 @@ def main():
                         '''array '''
                         if (type_var & SELECT_TYPE_MASK)==TYPE_VARIABLE['const']:
                             '''const'''
-                            size_array = (interp_section.fb_conf[pt_byte]<<8)|interp_section.fb_conf[pt_byte + 1]
+                            size_array = (interp_section.fb_conf[pt_byte])|(interp_section.fb_conf[pt_byte + 1]<<8)
                             pt_byte +=2
                             for i in range(size_array):
                                 if (((type_var & 0xE0) == TYPE_VARIABLE['bit']) |\
@@ -210,8 +210,8 @@ def main():
                                     pt_byte +=4
                         else:
                             '''addres'''
-                            size_array = (interp_section.fb_conf[pt_byte]<<8)|\
-                                          interp_section.fb_conf[pt_byte + 1]
+                            size_array = (interp_section.fb_conf[pt_byte])|\
+                                          (interp_section.fb_conf[pt_byte + 1]<<8)
                             pt_byte +=2
                             addres_array = (interp_section.fb_conf[pt_byte]<<8)|\
                                             interp_section.fb_conf[pt_byte+1]
@@ -394,26 +394,30 @@ class FB:
         self.out_variable   = {}
 
     def new_var(self,address_or_const,type_var,size,config_head):
+        gate = 0
         if (type_var & SELECT_TYPE_MASK==TYPE_VARIABLE['const']):
             if (type_var & SELECT_TYPE_MASK == TYPE_VARIABLE['input']) or\
                (type_var & SELECT_TYPE_MASK == TYPE_VARIABLE['const']):      
                 self.input_variable[self.input_variable_number] = (address_or_const,'const')
                 self.input_variable_number += 1
+                gate = self.input_variable_number
             elif type_var & SELECT_TYPE_MASK == 2:
                 self.out_variable[self.out_variable_number] = (address_or_const,'const')
                 self.out_variable_number += 1
                 print("BUG REPORT:UNCORECT TYPE const in OUT \n")
+                gate = self.out_variable_number
             elif type_var & SELECT_TYPE_MASK == 3:
                 self.var_variable[self.var_variable_number] = (address_or_const,'const')
                 self.var_variable_number += 1
+                gate = self.var_variable_number
             else:
                 print("BUG REPORT:UNCORECT TYPE \n")
  
             if self.order_number in config_head.full_table:
-                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(gate,size,address_or_const)})
             else:
                 config_head.full_table[self.order_number]=[self.type_number];
-                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(gate,size,address_or_const)})
 
             self.common_variable_number += 1
         else:
@@ -421,27 +425,30 @@ class FB:
                (type_var & SELECT_TYPE_MASK == TYPE_VARIABLE['const']):      
                 self.input_variable[self.input_variable_number] = (address_or_const,'addr')
                 self.input_variable_number += 1
+                gate = self.input_variable_number
             elif type_var & SELECT_TYPE_MASK == 2:
                 self.out_variable[self.out_variable_number] = (address_or_const,'addr')
                 self.out_variable_number += 1
+                gate = self.out_variable_number
             elif type_var & SELECT_TYPE_MASK == 3:
                 self.var_variable[self.var_variable_number] = (address_or_const,'addr')
                 self.var_variable_number += 1
+                gate = self.var_variable_number
             else:
                 print("BUG REPORT:UNCORECT TYPE \n")
             if address_or_const in config_head.address_array:
                 config_head.address_array[address_or_const][0] +=1
-                config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number))
+                config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],gate-1))
             else:
                 config_head.address_number +=1
                 config_head.address_array[address_or_const]=[1]
-                config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],self.common_variable_number))
+                config_head.address_array[address_or_const].append((self.type_number,self.order_number,TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK],gate-1))
 
             if (self.order_number) in config_head.full_table:
-                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(gate,size,address_or_const)})
             else:
                 config_head.full_table[self.order_number]=[self.type_number];
-                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(self.common_variable_number,address_or_const)})
+                config_head.full_table[self.order_number].append({TYPE_VARIABLE_I[type_var & SELECT_TYPE_MASK]:(gate,size,address_or_const)})
             self.common_variable_number += 1
 
     def print(self):

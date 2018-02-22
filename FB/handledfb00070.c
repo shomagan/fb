@@ -1,0 +1,58 @@
+/* "Преобразователь маршруса RTM64var -> RTM64" */
+ 
+ 
+#include "../vars.h"
+#include "../kernel.h"
+#include "../regs.h"
+
+#include "handledfb00070.h"
+
+void fb00070_exec(void)
+{
+
+	fb00070_IN_type *IN = (fb00070_IN_type *) FBInputs;
+	fb00070_OUT_type *OUT = (fb00070_OUT_type *) FBOutputs;
+
+	u8 i, RetranNum = 0;
+    
+	OUT->Module_Addr.Data.uint16 = IN->Module_Addr.Data.uint16;
+	OUT->Module_IntAddr.Data.uint16 = IN->Module_IntAddr.Data.uint16;
+  
+	for (i=0; i<4; i++) {
+    // Считаем кол-во контроллеров в маршруте
+		if ((IN->RTM_Rout[i<<1].Data.uint16 > 0) && 
+        	(IN->RTM_Rout[i<<1].Data.uint16 != 0xFFFF) && 
+	        (IN->RTM_Rout[(i<<1)+1].Data.uint8 != 0xFF) )
+    		
+			RetranNum++;
+    
+		OUT->RTM_Rout[i<<1].Data.uint16 = 0;
+		OUT->RTM_Rout[(i<<1)+1].Data.uint8 = 0;
+	}
+  
+	// Заполняем выходной маршрут
+	if (RetranNum > 0) {
+		OUT->RTM_Rout[6].Data.uint16 = IN->RTM_Rout[RetranNum-1].Data.uint16;
+		OUT->RTM_Rout[7].Data.uint8 = IN->RTM_Rout[RetranNum-1].Data.uint8;
+    
+		for (i=0; i<(RetranNum-1); i++) {
+			OUT->RTM_Rout[i<<1].Data.uint16 = IN->RTM_Rout[i<<1].Data.uint16;
+			OUT->RTM_Rout[(i<<1)+1].Data.uint8 = IN->RTM_Rout[(i<<1)+1].Data.uint8;
+		}
+	}
+}
+/*
+  type 0 - IN,1- VAR,2 - OUT
+  return size struct, or 0 if struct not
+*/    unsigned int fb00070_var_size(unsigned char type) {
+    switch(type){
+    case(0):
+        return sizeof(fb00070_IN_type);
+    case(1):
+        return 0;
+    case(2):
+        return sizeof(fb00070_OUT_type);
+    default:
+        return 0;
+    }
+}

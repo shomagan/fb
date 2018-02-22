@@ -14,7 +14,7 @@ def main():
     fb_have_h = []
     while 1:
         current+=1
-        if current == 123:
+        if current == 126:
             break
         if (current <= 9):
             fb_name = 'fb0000'+str(current)+'.c'
@@ -24,33 +24,45 @@ def main():
             fb_name = 'fb00'+str(current)+'.c'
         handing_fb_delete(fb_name,current)
         correct_exist_fb(fb_name,fb_have_c)
-        substitute_parametr(fb_name,'MaxLenRTM64Block','64')
-        substitute_parametr(fb_name,'MaxPacketLen','256')
-        substitute_parametr(fb_name,'cstFBInputsNum','256')
-        substitute_parametr(fb_name,'cstFBVarsNum','298')
-        substitute_parametr(fb_name,'cstFBOutputsNum','256')
+        try: 
+            os.rename(fb_name, fb_name+'bak')
+        except FileNotFoundError: 
+            print('file not found')
+        substitute_parametr('handled'+fb_name,'MaxLenRTM64Block','64')
+        substitute_parametr('handled'+fb_name,'MaxPacketLen','256')
+        substitute_parametr('handled'+fb_name,'cstFBInputsNum','256')
+        substitute_parametr('handled'+fb_name,'cstFBVarsNum','298')
+        substitute_parametr('handled'+fb_name,'cstFBOutputsNum','256')
+
         fb_name= fb_name[0:-1]+'h'
         correct_exist_fb(fb_name,fb_have_h)
-        substitute_parametr(fb_name,'MaxLenRTM64Block','64')
-        substitute_parametr(fb_name,'MaxPacketLen','256')
-        substitute_parametr(fb_name,'cstFBInputsNum','256')
-        substitute_parametr(fb_name,'cstFBVarsNum','298')
-        substitute_parametr(fb_name,'cstFBOutputsNum','256')
+        try: 
+            os.rename(fb_name, fb_name+'bak')
+        except FileNotFoundError: 
+            print('file not found')
+        substitute_parametr('handled'+fb_name,'MaxLenRTM64Block','64')
+        substitute_parametr('handled'+fb_name,'MaxPacketLen','256')
+        substitute_parametr('handled'+fb_name,'cstFBInputsNum','256')
+        substitute_parametr('handled'+fb_name,'cstFBVarsNum','298')
+        substitute_parametr('handled'+fb_name,'cstFBOutputsNum','256')
      
 
 
 def correct_exist_fb(name,fb_have):
     message = ''
     try:
-        for line in fileinput.input(name, inplace=1):
-            include_stm = re.compile('^\s*\#include\s+[\<\"]stm32\/stm32f20x\.h[\>\"]',re.ASCII)
-            include_cortex = re.compile('^\s*\#include\s+[\<\"]cortexm3\_macro\.h[\>\"]',re.ASCII)#include <cortexm3_macro.h>
-            include_pakmanager = re.compile('^\s*\#include\s+[\<\"]\.\.\/pakmanager\.h[\>\"]',re.ASCII)#include <pakmanager.h>
-            include_arc = re.compile('^\s*\#include\s+[\<\"]\.\.\/arc\.h[\>\"]',re.ASCII)#include <arc.h>
-            include_rtm_mw = re.compile('^\s*\#include\s+[\<\"]\.\.\/rtm_mw\.h[\>\"]',re.ASCII)#include "../rtm_mw.h"
-            include_modbus = re.compile('^\s*\#include\s+[\<\"]\.\.\/modbus\.h[\>\"]',re.ASCII)#include "../modbus.h"
-            include_rf = re.compile('^\s*\#include\s+[\<\"]\.\.\/rf\.h[\>\"]',re.ASCII)#include "../rf.h"
-
+        file_opened = open(name,'r', encoding="utf-8")
+        file_write = open('handled'+name,'w', encoding="utf-8")
+        for line in file_opened:
+            h_name= name[0:-1]+'h'
+            line = re.sub('^\s*\#include\s+[\<\"]((fb|FB)\d{5}).h[\>\"]', '#include \"handled\g<1>.h\"', line)
+            include_stm = re.compile('^\s*\#include\s+[\<\"]stm32\/stm32f20x\.h[\>\"]')
+            include_cortex = re.compile('^\s*\#include\s+[\<\"]cortexm3\_macro\.h[\>\"]')#include <cortexm3_macro.h>
+            include_pakmanager = re.compile('^\s*\#include\s+[\<\"]\.\.\/pakmanager\.h[\>\"]')#include <pakmanager.h>
+            include_arc = re.compile('^\s*\#include\s+[\<\"]\.\.\/arc\.h[\>\"]')#include <arc.h>
+            include_rtm_mw = re.compile('^\s*\#include\s+[\<\"]\.\.\/rtm_mw\.h[\>\"]')#include "../rtm_mw.h"
+            include_modbus = re.compile('^\s*\#include\s+[\<\"]\.\.\/modbus\.h[\>\"]')#include "../modbus.h"
+            include_rf = re.compile('^\s*\#include\s+[\<\"]\.\.\/rf\.h[\>\"]')#include "../rf.h"
             stm = include_stm.search(line)
             cortex = include_cortex.search(line)
             arc = include_arc.search(line)
@@ -58,14 +70,14 @@ def correct_exist_fb(name,fb_have):
             rtm_mw = include_rtm_mw.search(line)
             modbus = include_modbus.search(line)
             rf = include_rf.search(line)
-
             if cortex or stm or arc or pakmanager or rtm_mw or modbus or rf: 
-                message = 'find #include in '+name +'\n'
-                print('',end='')
+                message += 'find '+line[:-1]+'in '+name+' \n'
+                file_write.write(' '+'\n')
             else:
-                print(line,end='')
+                file_write.write(line)
         fb_have.append(name)
-        fileinput.close()
+        file_opened.close()
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)
@@ -73,10 +85,15 @@ def correct_exist_fb(name,fb_have):
 def substitute_attribute(name):
     message = ''
     try:
-        for line in fileinput.input(name, inplace=1):
+        temp_buff = ''
+        file_opened = open(name,'r', encoding="utf-8")
+        for line in file_opened:
             line = re.sub('\_\_attribute\_\_\s*\([\)\(\w]+\)', '', line)
-            print(line,end='')
-        fileinput.close()
+            temp_buff +=line
+        file_opened.close()
+        file_write = open(name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
 
@@ -85,13 +102,19 @@ def substitute_parametr(file_name,str_before,str_to):
     str_before_t = '([\w\W^])'+str_before+'([\w\W])'
     str_to_t = '\g<1>'+str_to+'\g<2>'
     try:
-        for line in fileinput.input(file_name, inplace=1):
+        temp_buff = ''
+        file_opened = open(file_name,'r', encoding="utf-8")
+        for line in file_opened:
             line_temp = line
             line = re.sub(str_before_t,str_to_t, line)
-            print(line,end='')
+            temp_buff += line
             if line_temp != line:
                 message += 'replace'+str_before+'in file'+file_name+'\n'
-        fileinput.close()
+        file_opened.close()
+
+        file_write = open(file_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+file_name+'\n')
     sys.stdout.write(message)
@@ -100,15 +123,19 @@ def substitute_parametr(file_name,str_before,str_to):
 def delete_line_from_exist_file(name,type_str):
     message = ''
     try:
-        for line in fileinput.input(name, inplace=1):
-            one = re.compile(type_str,re.ASCII)
+        temp_buff = ''
+        file_opened = open(name,'r', encoding="utf-8")
+        for line in file_opened:
+            one = re.compile(type_str)
             two = one.search(line)
             if two:
                 message = 'find non valid type in '+name +'\n'
-                print('',end='')
             else:
-                print(line,end='')
-        fileinput.close()
+                temp_buff += line
+        file_opened.close()
+        file_write = open(file_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)
@@ -116,17 +143,22 @@ def delete_line_from_exist_file(name,type_str):
 def add_fb_include(name,fb_have):
     message = ''
     try:
-        for line in fileinput.input(name, inplace=1):
-            include_kernel = re.compile('\#include\s+[\<\"]kernel\.h[\>\"]',re.ASCII)
+        temp_buff = ''
+        file_opened = open(name,'r', encoding="utf-8")
+        for line in file_opened:
+            include_kernel = re.compile('\#include\s+[\<\"]kernel\.h[\>\"]')
             kernel = include_kernel.match(line)
             if kernel:
                 message = 'find #include kernel '+name +'\n'
-                print(line,end='')
+                temp_buff +=line
                 for fb in fb_have:
-                    print('#include \"FB\\'+fb+'\"\n',end='')
+                    temp_buff+=('#include \"FB\\'+fb+'\"\n')
             else:
-                print(line,end='')
-        fileinput.close()
+                temp_buff+=line
+        file_opened.close()
+        file_write = open(name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)
@@ -136,13 +168,18 @@ def add_string_to(name,str_name):
     message = ''
     not_add = 1
     try:
-        for line in fileinput.input(name, inplace=1):
+        temp_buff = ''
+        file_opened = open(name,'r', encoding="utf-8")
+        for line in file_opened:
             if not_add:
                 not_add = 0
-                print(str_name+'\n',end='')
+                temp_buff+=(str_name+'\n')
             else:
-                print(line,end='')
-        fileinput.close()
+                temp_buff+=line
+        file_opened.close()
+        file_write = open(name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)
@@ -151,17 +188,23 @@ def add_string_to_after(file_name,str_print,str_find):
     message = ''
     not_add = 1
     try:
-        for line in fileinput.input(file_name, inplace=1):
-            one = re.compile(str_find,re.ASCII)
+        temp_buff = ''
+        file_opened = open(name,'r', encoding="utf-8")
+        for line in file_opened:
+            one = re.compile(str_find)
             two = one.search(line)
             if not_add and two:
                 not_add = 0
-                print(line,end='')
-                print(str_print+'\n',end='')
+                temp_buff+=line
+                temp_buff+=(str_print+'\n')
                 message = 'add string after'
             else:
-                print(line,end='')
-        fileinput.close()
+                temp_buff+=line
+        file_opened.close()
+        file_write = open(file_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
+
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     if not_add:
@@ -170,7 +213,7 @@ def add_string_to_after(file_name,str_print,str_find):
 
 
 def handing_fb_delete(fb_name,current):
-    fb_not_testing = [33,34,35,36,103,104,105,108,109,110,111,118,119,120,121,122] 
+    fb_not_testing = [33,34,35,36,103,104,105,108,109,110,111,118,119,120,121,122,123,124,125] 
     if current in fb_not_testing:
         delete_function_fb(fb_name)
 
@@ -179,13 +222,18 @@ def delete_function_fb(fb_name):
     message = ''
     add_str = 0
     try:
-        for line in fileinput.input(fb_name, inplace=1):
+        temp_buff = ''
+        file_opened = open(fb_name,'r', encoding="utf-8")
+        for line in file_opened:
             if add_str==0:
                 add_str+=1
                 function_name = 'void '+fb_name[0:-2]+'_exec(void){}'
-                print(function_name,end='')
+                temp_buff+=function_name
                 message = 'delete fb '+fb_name +'\n'
-        fileinput.close()
+        file_opened.close()
+        file_write = open(fb_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)

@@ -54,10 +54,12 @@ def find_type_and_add_delarate(file_fb_name):
     global comment
     comment = 0
     type_c = 0x00
-    num_lines = sum(1 for line in open(file_fb_name))
+    num_lines = sum(1 for line in open('handled'+file_fb_name, encoding="utf-8"))
     num_lines=num_lines-1
     try:
-        for line in fileinput.input(file_fb_name, inplace=1):
+        temp_buff = ''
+        file_opened = open('handled'+file_fb_name,'r', encoding="utf-8")
+        for line in file_opened:
             if '//' in line:
                 start = line.find('//')
                 line_temp = line[:start]
@@ -76,12 +78,17 @@ def find_type_and_add_delarate(file_fb_name):
                     type_c = type_c | 0x02
                 if out_type in str_object.clear_line:
                     type_c = type_c | 0x04
-            print(line,end='')
+            temp_buff += line
             if num_lines:
                 num_lines=num_lines-1
             else:
                 str_t = 'u32 '+file_fb_name[:-2]+'_var_size(u8 type);\n'
-                print(str_t,end='')
+                temp_buff += str_t
+        file_opened.close()
+        file_write = open('handled'+file_fb_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
+
     except FileNotFoundError: 
         sys.stdout.write('dont find '+file_fb_name +'\n')
 
@@ -92,7 +99,7 @@ def find_type_and_add_delarate(file_fb_name):
 def add_function():
     fb_have_c = []
     fb_have_h = []
-    for current in range(1,123):
+    for current in range(1,126):
         try:
             if (current <= 9):
                 fb_name = 'fb0000'+str(current)+'.h'
@@ -107,10 +114,12 @@ def add_function():
             if type_c==0:
                 print("error fb struct name")
             add_fb_include(fb_name_c)
-            num_lines = sum(1 for line in open(fb_name_c))
+            num_lines = sum(1 for line in open('handled'+fb_name_c, encoding="utf-8"))
             num_lines=num_lines-1
-            for line in fileinput.input(fb_name_c, inplace=1):
-                print(line,end='')
+            temp_buff = ''
+            file_opened = open('handled'+fb_name_c,'r', encoding="utf-8")
+            for line in file_opened:
+                temp_buff +=line
                 if num_lines:
                     num_lines=num_lines-1
                 else:
@@ -140,20 +149,28 @@ def add_function():
                             '        return 0;\n'+\
                             '    }\n'+\
                             '}\n'
-                    print(str_t,end='')
+                    temp_buff += str_t  
+            file_opened.close()
+            file_write = open('handled'+fb_name_c,'w', encoding="utf-8")
+            file_write.write(temp_buff)
+            file_write.close()
+            
         except FileNotFoundError: 
-            sys.stdout.write('dont find '+fb_name +'\n')
+            sys.stdout.write('dont find '+'handled'+fb_name +'\n')
 def add_fb_include(fb_name):
     message = ''
     kernel_finded = 0
     include_fb_finded = 0
     try:
-        for line in fileinput.input(fb_name, inplace=1):
+        temp_buff = ''
+        file_opened = open('handled'+fb_name,'r', encoding="utf-8")
+        print('add_fb_i')
+        for line in file_opened:
             include_kernel = re.compile('^\s*\#include\s+[\<\"]\.\.\/kernel\.h[\>\"]',re.ASCII)
             kernel_find = include_kernel.match(line)
             if kernel_find:
                 kernel_finded = 1
-            include_fb = re.compile('^\s*\#include\s+[\<\"]'+fb_name[:-2]+'\.h[\>\"]',re.ASCII)
+            include_fb = re.compile('^\s*\#include\s+[\<\"]'+'handled'+fb_name[:-2]+'\.h[\>\"]',re.ASCII)
             include_fb_find = include_fb.match(line)
             if include_fb_find:
                 include_fb_finded = 1
@@ -164,16 +181,20 @@ def add_fb_include(fb_name):
                     message = 'find #include kernel '+fb_name +'\n'
                 else:
                     message = 'didnt find #include kernel '+fb_name +'\n'
-                    print('#include \"../kernel.h\"\n',end='')
+                    temp_buff += '#include \"../kernel.h\"\n'
                 if include_fb_finded:
                     message = 'find #include fb '+fb_name +'\n'
                 else:
                     message = 'didnt find #include fb '+fb_name +'\n'
-                    print('#include \"'+fb_name[:-2]+'.h\"\n',end='')
-                print(line,end='')
+                    temp_buff +='#include \"'+'handled'+fb_name[:-2]+'.h\"\n'
+                temp_buff += line
             else:
-                print(line,end='')
-        fileinput.close()
+                temp_buff += line
+        file_opened.close()
+        file_write = open('handled'+fb_name,'w', encoding="utf-8")
+        file_write.write(temp_buff)
+        file_write.close()
+
     except FileNotFoundError: 
         sys.stdout.write('dont find '+name +'\n')
     sys.stdout.write(message)
