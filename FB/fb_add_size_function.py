@@ -9,10 +9,12 @@ import fileinput
 #def hextoascii():
 global comment
 
+
 class str_class(object):
     def __init__(self,clear_line,restline):
         self.clear_line = clear_line
         self.restline = restline
+
 
 def find_comment(str_object):
     global comment
@@ -48,7 +50,6 @@ def find_comment(str_object):
                 else:
                     return str_object
 
-
     
 def find_type_and_add_delarate(file_fb_name):
     global comment
@@ -80,7 +81,7 @@ def find_type_and_add_delarate(file_fb_name):
                     type_c = type_c | 0x04
             temp_buff += line
             if num_lines:
-                num_lines=num_lines-1
+                num_lines-=1
             else:
                 str_t = 'u32 '+file_fb_name[:-2]+'_var_size(u8 type);\n'
                 temp_buff += str_t
@@ -93,7 +94,6 @@ def find_type_and_add_delarate(file_fb_name):
         sys.stdout.write('dont find '+file_fb_name +'\n')
 
     return type_c
-
 
 
 def add_function():

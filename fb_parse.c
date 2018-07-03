@@ -15,6 +15,7 @@ struct fb_visual* fb_array;
 int branch_number_in_array;
 int fb_number_in_array;
 static uint8_t parse_branch(char* addr_ptr,char addr_len,u16 address);
+static uint8_t parse_fb(char* fb_ptr,char fb_len,u32 order);
 void print_branch(void);
 #define FAIL(str, line)                           \
   do {                                            \
@@ -202,19 +203,19 @@ char parse_json_fb_file(const char *path){
         printf("fb numm %i ",fb_number_in_array);
     }
 }
-uint8_t parse_fb(char* fb_ptr,char fb_len){
+uint8_t parse_fb(char* fb_ptr,char fb_len,u32 order){
 	int id_i=0;
     u32 current_branch_number ;
     struct fb_branch temp_branch;
     void *h = NULL;
     char buf_s[200];
-    current_branch_number = atoi(addr_ptr+1);
+    current_branch_number = atoi(fb_ptr+1);
     if(current_branch_number >1){
     	struct json_token  val_b;
     	int input_num_for_addr = 0;
     	int id = 0;
         for (u16 tb=0;tb<=current_branch_number ;tb++){
-            if((h = json_next_elem(addr_ptr, addr_len, h, "", &id, &val_b))!=NULL){
+            if((h = json_next_elem(fb_ptr, fb_len, h, "", &id, &val_b))!=NULL){
             	struct json_token val_i;
                 if(tb>0){
                 	uint16_t fb_type,gate_number;
